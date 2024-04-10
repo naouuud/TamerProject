@@ -7,6 +7,7 @@
 /WeatherForecast.cs
 /Controllers/WeatherForecastController.cs
 /Controllers/ProfileController.cs
+/appsettings.json
 
 # User-specific files
 *.rsuser

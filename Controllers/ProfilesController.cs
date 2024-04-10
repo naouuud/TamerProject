@@ -26,18 +26,24 @@ namespace TamerProject.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> PostProfile([FromBody] Profile profile)
+        public async Task<IActionResult> PostProfile([FromForm] Profile profile)
         {
-            if (profile.Name.Length == 0) return BadRequest("The Name property must contain at least one character.");
-            await _profileRepository.RepoAdd(profile);
+            var result = await _profileRepository.RepoAdd(profile);
+            if (result != "Ok")
+            {
+                return BadRequest(result);
+            }
             return CreatedAtAction("GetProfile", new { id = profile.Id }, profile);
         }
 
         [HttpPut]
-        public async Task<IActionResult> PutProfile([FromBody] Profile profile)
+        public async Task<IActionResult> PutProfile([FromForm] Profile profile)
         {
-            if (profile.Name.Length == 0) return BadRequest("The Name property must contain at least one character.");
-            await _profileRepository.RepoUpdate(profile);
+            var result = await _profileRepository.RepoUpdate(profile);
+            if (result != "Ok")
+            {
+                return BadRequest(result);
+            }
             return NoContent();
         }
 

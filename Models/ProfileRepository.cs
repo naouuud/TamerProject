@@ -6,8 +6,8 @@ namespace TamerProject.Models
     {
         Task<List<Profile>> RepoGetAll();
         Task<Profile?> RepoGetById(int id);
-        Task<int> RepoAdd(Profile profile);
-        Task<int> RepoUpdate(Profile updatedProfile);
+        Task<string> RepoAdd(Profile profile);
+        Task<string> RepoUpdate(Profile updatedProfile);
         Task RepoDelete(Profile profile);
         Task<List<Profile>> RepoSearch(string searchTerm);
     }
@@ -19,7 +19,8 @@ namespace TamerProject.Models
 
         public async Task<List<Profile>> RepoGetAll()
         {
-            return await _context.Profiles.ToListAsync();
+            var result = await _context.Profiles.ToListAsync();
+            return result;
         }
 
         public async Task<Profile?> RepoGetById(int id) 
@@ -27,22 +28,42 @@ namespace TamerProject.Models
             return await _context.Profiles.FindAsync(id);
         }
 
-        public async Task<int> RepoAdd(Profile profile)
+        public async Task<string> RepoAdd(Profile profile)
         {
+            if (profile.Name.Length == 0)
+            {
+                return "The Name property must contain at least one character.";
+            }
+            if (profile.Date_of_birth != null)
+            {
+                var dob = profile.Date_of_birth.GetValueOrDefault();
+                profile.Date_of_birth = new DateTime(dob.Year, dob.Month, dob.Day);
+            }
             _context.Profiles.Add(profile);
-            return await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
+            return "Ok";
         }
 
-        public async Task<int> RepoUpdate(Profile updatedProfile)
+        public async Task<string> RepoUpdate(Profile updatedProfile)
         {
             var entry = await _context.Profiles.FindAsync(updatedProfile.Id);
             if (entry != null)
             {
+                if (updatedProfile.Name.Length == 0)
+                {
+                    return "The Name property must contain at least one character.";
+                }
                 entry.Name = updatedProfile.Name;
                 entry.Address = updatedProfile.Address;
+                if (updatedProfile.Date_of_birth != null)
+                {
+                    var dob = updatedProfile.Date_of_birth.GetValueOrDefault();
+                    updatedProfile.Date_of_birth = new DateTime(dob.Year, dob.Month, dob.Day);
+                }
                 entry.Date_of_birth = updatedProfile.Date_of_birth;
             }
-            return await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
+            return "Ok";
         }
 
         public async Task RepoDelete(Profile profile)
