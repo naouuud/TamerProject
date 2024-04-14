@@ -26,7 +26,7 @@ namespace TamerProject.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> PostProfile([FromForm] Profile profile)
+        public async Task<IActionResult> PostProfile([FromBody] Profile profile)
         {
             var result = await _profileRepository.RepoAdd(profile);
             if (result != "Ok")
@@ -37,7 +37,7 @@ namespace TamerProject.Controllers
         }
 
         [HttpPut]
-        public async Task<IActionResult> PutProfile([FromForm] Profile profile)
+        public async Task<IActionResult> PutProfile([FromBody] Profile profile)
         {
             var result = await _profileRepository.RepoUpdate(profile);
             if (result != "Ok")
